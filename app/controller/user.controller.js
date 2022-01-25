@@ -181,6 +181,20 @@ exports.delete = (req, res) => {
 // Delete All Users From databse
 exports.deleteAll = (req, res) => {
 
+    Users.destroy({
+            where: {},
+            truncate: false
+        })
+        .then((data) => {
+            res.send({
+                message: `${nums} Users were deleted successfully!`
+            })
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while removing all Users."
+            })
+        })
 
 
 };
