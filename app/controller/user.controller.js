@@ -178,7 +178,7 @@ exports.delete = (req, res) => {
 
 }
 
-// Delete All Users From databse
+// Delete All Users From databse  
 exports.deleteAll = (req, res) => {
 
     Users.destroy({
