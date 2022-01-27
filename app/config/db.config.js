@@ -4,6 +4,7 @@ module.exports = {
     PASSWORD: "P@$$word@1234",
     DB: "expressapi",
     dialect: "mysql",
+    logging: true,
     pool: {
         max: 5,
         min: 0,

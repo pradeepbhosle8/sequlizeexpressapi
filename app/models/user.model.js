@@ -3,6 +3,9 @@ module.exports = (sequelize, Sequelize) => {
         username: {
             type: Sequelize.STRING
         },
+        email: {
+            type: Sequelize.STRING,
+        },
         Password: {
             type: Sequelize.STRING
         },
@@ -11,6 +14,20 @@ module.exports = (sequelize, Sequelize) => {
         },
         lname: {
             type: Sequelize.STRING
+        },
+        gender: {
+            type: Sequelize.ENUM('m', 'f')
+        },
+        created_at: {
+            type: 'TIMESTAMP',
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            allowNull: false
+
+        },
+        updated_at: {
+            type: 'TIMESTAMP',
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            allowNull: false
         },
         publish: Sequelize.BOOLEAN
     }, {

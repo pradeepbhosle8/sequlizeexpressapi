@@ -2,6 +2,10 @@ const db = require('../models');
 const Users = db.Users;
 const Op = db.Sequelize.Op;
 
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
+
+
 // create and save new Users
 exports.create = async(req, res) => {
 
@@ -34,9 +38,13 @@ exports.create = async(req, res) => {
     // Create Users
     const user = await {
             username: req.body.username,
-            Password: req.body.Password,
+            // email: req.body.email,
+            Password: bcrypt.hashSync(req.body.Password, 8),
+
+            // Password: req.body.Password,
             fname: req.body.fname,
             lname: req.body.lname,
+            // gender: req.body.gender,
             publish: req.body.publish ? req.body.publish : false
         }
         // console.log('sadsada:  ' + Users);
@@ -44,13 +52,16 @@ exports.create = async(req, res) => {
     // SAve Users in database Users.create
     await Users.create(user)
         .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the Users."
+            res.send({
+                message: 'User was registered successfully!'
             });
+        })
+
+    .catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while creating the Users."
         });
+    });
 
 };
 
@@ -214,4 +225,3 @@ exports.finadAllPublished = (req, res) => {
             })
         })
 };
-s
