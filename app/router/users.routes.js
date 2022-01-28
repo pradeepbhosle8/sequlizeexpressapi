@@ -1,11 +1,13 @@
 module.exports = app => {
     const users = require('../controller/user.controller');
+    const { verifySignUp } = require('../middleware');
 
     var router = require('express').Router();
 
 
     //Create a New Users
-    router.post('/', users.create);
+    router.post('/', [verifySignUp.checkDuplicateUsernameOrEmail],
+        users.create);
 
     // Retriveve all Users
     router.get('/', users.findAll);
@@ -24,6 +26,9 @@ module.exports = app => {
 
     // Delete all Users
     // router.delete();
+
+    // login User ir signUp user
+    router.post('/signin', users.signin)
 
     app.use('/api/users', router);
 }

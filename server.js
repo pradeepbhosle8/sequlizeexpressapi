@@ -31,23 +31,23 @@ const Role = db.role;
 
 db.sequelize.sync({ force: false }).then(() => {
     console.log('Drop and re-sync db');
-    initial();
+    // initial();
 })
 
-function initial() {
-    Role.create({
-        id: 1,
-        name: 'user'
-    });
-    Role.create({
-        id: 2,
-        name: 'moderator'
-    });
-    Role.create({
-        id: 3,
-        name: 'admin'
-    })
-}
+// function initial() {
+//     Role.create({
+//         id: 1,
+//         name: 'user'
+//     });
+//     Role.create({
+//         id: 2,
+//         name: 'moderator'
+//     });
+//     Role.create({
+//         id: 3,
+//         name: 'admin'
+//     })
+// }
 
 
 

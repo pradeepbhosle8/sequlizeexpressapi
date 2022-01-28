@@ -1,4 +1,5 @@
 const db = require('../models');
+const config = require('../config/auth.config');
 const Users = db.Users;
 const Op = db.Sequelize.Op;
 
@@ -38,13 +39,13 @@ exports.create = async(req, res) => {
     // Create Users
     const user = await {
             username: req.body.username,
-            // email: req.body.email,
+            email: req.body.email,
             Password: bcrypt.hashSync(req.body.Password, 8),
 
             // Password: req.body.Password,
             fname: req.body.fname,
             lname: req.body.lname,
-            // gender: req.body.gender,
+            gender: req.body.gender,
             publish: req.body.publish ? req.body.publish : false
         }
         // console.log('sadsada:  ' + Users);
@@ -52,6 +53,27 @@ exports.create = async(req, res) => {
     // SAve Users in database Users.create
     await Users.create(user)
         .then(data => {
+            // if (req.body.roles) {
+            //     Role.findAll({
+            //             where: {
+            //                 name: {
+            //                     [Op.or]: req.body.roles
+            //                 }
+            //             }
+            //         })
+            //         .then(data => {
+            //             data.setRoles(roles).then(() => {
+            //                 res.send({
+            //                     message: 'User Was registered Successfully !'
+            //                 })
+            //             })
+            //         })
+            // } else {
+            //     // user role = 1
+            //     user.setRoles([1]).then(() => {
+            //         res.send({ message: "User was registered successfully!" });
+            //     });
+            // }
             res.send({
                 message: 'User was registered successfully!'
             });
@@ -225,3 +247,54 @@ exports.finadAllPublished = (req, res) => {
             })
         })
 };
+
+// login 
+
+exports.signin = (req, res) => {
+    Users.findOne({
+            where: {
+                // username: req.body.username,
+                email: req.body.email
+            }
+        }).then(user => {
+            if (!user) {
+                return res.status(404).send({
+                    message: 'User Not Found'
+                })
+            }
+            var passwordIsValid = bcrypt.compareSync(
+                req.body.Password,
+                user.Password
+            );
+
+
+            if (!passwordIsValid) {
+                return res.status(401).send({
+                    accessToken: null,
+                    message: 'Invalid Password'
+                })
+            }
+            var token = jwt.sign({ id: user.id }, config.secret, {
+                expiresIn: 86400 // 24 hours
+            });
+
+            // var authorities = [];
+
+            user.getRoles().then(roles => {
+                // for (let i = 0; i < roles.length; i++) {
+                //     authorities.push("ROLE_" + roles[i].name.toUpperCase());
+                // }
+                res.status(200).send({
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    // roles: authorities,
+                    accessToken: token
+                });
+            });
+        })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+
+        })
+}
